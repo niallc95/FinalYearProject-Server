@@ -96,7 +96,7 @@ app.post('/login', function (req, res) {
     } else {
         console.log(req.body);
 
-        user.find({email: req.body.email, password: req.body.password}, function (err, users) {
+        User.find({email: req.body.email, password: req.body.password}, function (err, users) {
             if (err) {
                 res.json({code: "502", message: "Cannot connect to the database!"});
             } else {
@@ -115,10 +115,44 @@ app.post('/login', function (req, res) {
     }
 });
 //##########################################################################################
+//                                Add item to catalogue
+//##########################################################################################
+
+app.post('/addItem', function (req, res) {
+    var item = new Item();
+    if (!req.body.productName||!req.body.productPrice||!req.body.scanContent) {
+        var error_message = {
+            code: '400',
+            message: 'Invalid product. Please try again'
+        };
+        res.send(error_message);
+    } else {
+        Item.find({productName: req.body.productName}, function (err, items) {
+            if (items.length > 0) {
+                res.json({code: '400', message: 'product is already registered'});
+            } else {
+                item.productName = req.body.productName;
+                item.productPrice = req.body.productPrice;
+                item.scanContent = req.body.scanContent;
+                item.productCategory = req.body.productCategory;
+
+
+                item.save(function (err) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.json({code: "200", message: 'Product successfully added to catalogue!!'});
+                });
+            }
+        });
+    }
+});
+
+//##########################################################################################
 //                                Find item by barcode
 //##########################################################################################
 
-app.post('/item', function (req, res) {
+app.post('/findItem', function (req, res) {
     var item = new Item();
 
     item.scanContent = req.body.scanContent;
