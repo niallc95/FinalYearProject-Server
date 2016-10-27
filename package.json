@@ -13,9 +13,9 @@
 		"mongoose": "~3.6.13", 
 		"body-parser": "~1.0.1",
 		"simplify-commerce": "~1.1.2", 
-		"moment": "latest"
-    "logfmt": "~1.1.2",
-    "mongodb": "^1.4.7",
+		"moment": "latest",
+    		"logfmt": "~1.1.2",
+    		"mongodb": "^1.4.7"
   },
   "engines": {
     "node": "0.10.x"
