@@ -9,15 +9,13 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "body-parser": "^1.5.2",
-    "express": "^4.7.2",
+		"express": "~4.0.0", 
+		"mongoose": "~3.6.13", 
+		"body-parser": "~1.0.1",
+		"simplify-commerce": "~1.1.2", 
+		"moment": "latest"
     "logfmt": "~1.1.2",
     "mongodb": "^1.4.7",
-    "mongoose": "^3.8.14",
-    "simplify-commerce": "~1.1.2",
-    "passport": "~0.2.0",
-    "passport-local": "~1.0.0",
-    "moment":"latest"
   },
   "engines": {
     "node": "0.10.x"
