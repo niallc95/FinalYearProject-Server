@@ -7,7 +7,7 @@ var Item = require('./models/item');
 var bodyParser = require('body-parser');
 var moment = require('moment');
 var app = express();
-mongoose.connect('mongodb://test:test@ds033607.mlab.com:33607/heroku_fbnj3c1m');
+mongoose.connect(config.mongoUri);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
