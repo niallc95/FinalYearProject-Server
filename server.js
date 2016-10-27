@@ -26,10 +26,10 @@ app.post('/payment', function (req, res) {
         "amount": req.body.amount,
         "description": "Hoarder payment",
         "card": {
-            "expMonth": req.body.expMonth,
-            "expYear": req.body.expYear,
-            "cvc": req.body.cvc,
-            "number": req.body.number
+            "expMonth": req.body.card.expMonth,
+            "expYear": req.body.card.expYear,
+            "cvc": req.body.card.cvc,
+            "number": req.body.card.number
         },
         "currency": "EUR"
     };
