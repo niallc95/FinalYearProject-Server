@@ -7,6 +7,7 @@ var Item = require('./models/item');
 var bodyParser = require('body-parser');
 var moment = require('moment');
 var app = express();
+mongoose.connect(config.mongoUri);
 
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
