@@ -1,23 +1,20 @@
 {
-  "name": "hoarder-api",
-  "version": "0.0.0",
-  "description": "ERROR: No README data found!",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "BSD-2-Clause",
-  "dependencies": {
-		"express": "~4.0.0", 
-		"mongoose": "~3.6.13", 
-		"body-parser": "~1.0.1",
-		"simplify-commerce": "~1.1.2", 
-		"moment": "latest",
-    		"logfmt": "~1.1.2",
-    		"mongodb": "^1.4.7"
-  },
-  "engines": {
-    "node": "0.10.x"
-  }
+	"name": "node-api", 
+	"Version": "1.0.0",
+	"main": "server.js",
+	"dependencies": {
+        "logfmt": "latest",
+        "mongodb": "latest",
+		"express": "latest",
+		"mongoose": "latest",
+		"body-parser": "latest",
+		"simplify-commerce": "latest",
+		"moment": "latest"
+
+	}, 
+
+	"engines":{ 
+		"node": "latest"
+	}
+
 }
