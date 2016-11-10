@@ -12,11 +12,9 @@ mongoose.connect(config.mongoUri);
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
-
 app.get('/', function (req, res) {
     res.json("Welcome to the hoarder server!");
 });
-
 //##########################################################################################
 //                                Payment
 //##########################################################################################
@@ -119,19 +117,23 @@ app.post('/login', function (req, res) {
 //                                Find user by email
 //##########################################################################################
 
-app.post('/user/get', function (req, res) {
-    var user = new User();
+app.param('email', function(req, res, next, email) {
+    req.email = email;
+    next();
+});
 
-    user.email = req.body.email;
-
-    User.find({email: user.email}, function (err, users){
+app.get('/api/users/:email', function(req, res) {
+     var user = new User();
+     user.email = req.email; 
+     User.find({email: user.email}, function (err, users){
         if(users.length > 0){
             res.json(users);
         }
         else{
-            res.json({message: 'No user found with this email address!!'});
+            res.json({message: 'There is no product with this barcode in our system. We apologise for any inconvenience!!'});
         }
     });
+    res.json(res);
 });
 //##########################################################################################
 //                                Add item to catalogue
