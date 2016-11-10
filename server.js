@@ -122,7 +122,7 @@ app.param('email', function(req, res, next, email) {
     next();
 });
 
-app.get('/api/users/:email', function(req, res) {
+app.get('/user/:email', function(req, res) {
      var user = new User();
      user.email = req.email; 
      User.find({email: user.email}, function (err, users){
