@@ -145,6 +145,9 @@ app.put('/user/:email', function(req, res) {
         if(users.length > 0){
             user.password = req.body.password; 
             if(!req.body.password){ 
+                res.json({code:"400", message: 'Bad request, please try again!!'});
+            }
+            else{ 
                 user.save(function (err) {
                     if (err) {
                         res.send(err);
@@ -152,11 +155,9 @@ app.put('/user/:email', function(req, res) {
                     res.json({code: "200", message: 'Account successfully updated!!'});
                 });
             }
-            else{ 
-                res.json({code:"400", message: 'Bad request, please try again!!'});
-            }
         else{
             res.json({message: 'Error: Invalid password. Please try again!!'});
+        }
         }
     });
 });
