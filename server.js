@@ -130,7 +130,7 @@ app.get('/user/:email', function(req, res) {
             res.json(users);
         }
         else{
-            res.json({message: 'There is no product with this barcode in our system. We apologise for any inconvenience!!'});
+            res.json({message: 'A user with that email address has not been registered. Please try again!!'});
         }
     });
 });
