@@ -133,8 +133,6 @@ app.get('/api/users/:email', function(req, res) {
             res.json({message: 'There is no product with this barcode in our system. We apologise for any inconvenience!!'});
         }
     });
-    res.json(res);
-});
 //##########################################################################################
 //                                Add item to catalogue
 //##########################################################################################
