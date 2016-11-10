@@ -114,6 +114,25 @@ app.post('/login', function (req, res) {
         });
     }
 });
+
+//##########################################################################################
+//                                Find user by email
+//##########################################################################################
+
+app.post('/user/get', function (req, res) {
+    var user = new User();
+
+    user.email = req.body.email;
+
+    User.find({email: user.email}, function (err, users){
+        if(users.length > 0){
+            res.json(users);
+        }
+        else{
+            res.json({message: 'No user found with this email address!!'});
+        }
+    });
+});
 //##########################################################################################
 //                                Add item to catalogue
 //##########################################################################################
