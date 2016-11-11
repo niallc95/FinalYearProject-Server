@@ -123,9 +123,9 @@ app.param('email', function(req, res, next, email) {
 });
 
 app.get('/user/:email', function(req, res) {
-     var user = new User();
-     user.email = req.email; 
-     User.find({email: user.email}, function (err, users){
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users){
         if(users.length > 0){
             res.json(users);
         }
@@ -139,15 +139,14 @@ app.get('/user/:email', function(req, res) {
 //                                Update user by email
 //##########################################################################################
 app.put('/user/:email', function(req, res) {
-     var user = new User();
-     user.email = req.email;
-     User.find({email: user.email}, function (err, users){
-        if(users.length > 0){
-            user.password = req.body.password; 
-            if(!req.body.password){ 
-                res.json({code:"400", message: 'Bad request, please try again!!'});
-            }
-            else{ 
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users){
+        if(users.length > 0) {
+            user.password = req.body.password;
+            if (!req.body.password) {
+                res.json({code: "400", message: 'Bad request, please try again!!'});
+            }else {
                 user.save(function (err) {
                     if (err) {
                         res.send(err);
@@ -155,10 +154,9 @@ app.put('/user/:email', function(req, res) {
                     res.json({code: "200", message: 'Account successfully updated!!'});
                 });
             }
-        else{
-            res.json({message: 'Error: Invalid password. Please try again!!'});
-        }
-        }
+        }else{
+                res.json({message: 'Error: Invalid password. Please try again!!'});
+            }
     });
 });
 //##########################################################################################
