@@ -202,7 +202,7 @@ app.param('scanContent', function(req, res, next, email) {
     next();
 });
 
-app.get('/user/:scanContent', function(req, res) {
+app.get('/findItem/:scanContent', function(req, res) {
     var item = new Item();
     item.scanContent = req.scanContent;
     Item.find({scanContent: item.scanContent}, function (err, items){
