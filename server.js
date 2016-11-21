@@ -197,7 +197,7 @@ app.post('/addItem', function (req, res) {
 //                                Find item by barcode
 //##########################################################################################
 
-app.param('scanContent', function(req, res, next, email) {
+app.param('scanContent', function(req, res, next, scanContent) {
     req.scanContent = scanContent;
     next();
 });
