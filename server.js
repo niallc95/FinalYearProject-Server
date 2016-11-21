@@ -197,17 +197,41 @@ app.post('/addItem', function (req, res) {
 //                                Find item by barcode
 //##########################################################################################
 
-app.post('/findItem', function (req, res) {
+app.param('scanContent', function(req, res, next, email) {
+    req.scanContent = scanContent;
+    next();
+});
+
+app.get('/user/:scanContent', function(req, res) {
     var item = new Item();
-
-    item.scanContent = req.body.scanContent;
-
+    item.scanContent = req.scanContent;
     Item.find({scanContent: item.scanContent}, function (err, items){
         if(items.length > 0){
             res.json(items);
         }
         else{
-            res.json({message: 'There is no product with this barcode in our system. We apologise for any inconvenience!!'});
+            res.json({message: 'An item with that barcode data is not registered with Hoarder. Please try again'});
+        }
+    });
+});
+//##########################################################################################
+//                                Find user by scanContent
+//##########################################################################################
+
+app.param('barcode', function(req, res, next, email) {
+    req.email = email;
+    next();
+});
+
+app.get('/user/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users){
+        if(users.length > 0){
+            res.json(users);
+        }
+        else{
+            res.json({message: 'A user with that email address has not been registered. Please try again!!'});
         }
     });
 });
