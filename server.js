@@ -214,27 +214,6 @@ app.get('/findItem/:scanContent', function(req, res) {
         }
     });
 });
-//##########################################################################################
-//                                Find user by scanContent
-//##########################################################################################
-
-app.param('barcode', function(req, res, next, email) {
-    req.email = email;
-    next();
-});
-
-app.get('/user/:email', function(req, res) {
-    var user = new User();
-    user.email = req.email;
-    User.find({email: user.email}, function (err, users){
-        if(users.length > 0){
-            res.json(users);
-        }
-        else{
-            res.json({message: 'A user with that email address has not been registered. Please try again!!'});
-        }
-    });
-});
 
 //##########################################################################################
 //                                Server Port Config
