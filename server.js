@@ -127,7 +127,8 @@ app.get('/user/:email', function(req, res) {
     user.email = req.email;
     User.find({email: user.email}, function (err, users){
         if(users.length > 0){
-            res.json(users);
+            var first=users[0];
+            res.json(first);
         }
         else{
             res.json({message: 'A user with that email address has not been registered. Please try again!!'});
