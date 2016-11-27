@@ -64,6 +64,7 @@ app.post('/user', function (req, res) {
     } else {
         User.find({email: req.body.email}, function (err, users) {	// Check users in the DB for the same email
             if (users.length > 0) {
+                res.status(400);
                 res.json({code: '400', message: 'E-mail already exists!'});
             } else {
                 user.name = req.body.name;
@@ -77,6 +78,7 @@ app.post('/user', function (req, res) {
                     if (err) {
                         res.send(err);
                     }
+                    res.status(200);
                     res.json({code: "200", message: 'User account created successfully'});
                 });
             }
@@ -90,6 +92,7 @@ app.post('/user', function (req, res) {
 
 app.post('/login', function (req, res) {
     if (!req.body.password || !req.body.email) {
+        res.status(400);
         res.json({code: "400", message: "You must have a valid email and password"});
     } else {
         console.log(req.body);
@@ -101,8 +104,10 @@ app.post('/login', function (req, res) {
                 if (users.length == 1) {
                     //successful login response
                     if (req.body.password == users[0].password) {
+                        res.status(200);
                         res.json({code: "200", message: "Welcome back " + users[0].name});
                     } else {
+                        res.status(401);
                         res.json({code: "401", message: "Not allowed!"});
                     }
                 } else {
@@ -127,10 +132,12 @@ app.get('/user/:email', function(req, res) {
     user.email = req.email;
     User.find({email: user.email}, function (err, users){
         if(users.length > 0){
+            res.status(200);
             var first=users[0];
             res.json(first);
         }
         else{
+            res.status(400);
             res.json({message: 'A user with that email address has not been registered. Please try again!!'});
         }
     });
@@ -146,12 +153,14 @@ app.put('/user/:email', function(req, res) {
         if(users.length > 0) {
             user.password = req.body.password;
             if (!req.body.password) {
+                res.status(400);
                 res.json({code: "400", message: 'Bad request, please try again!!'});
             }else {
                 user.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
+                    res.status(200);
                     res.json({code: "200", message: 'Account successfully updated!!'});
                 });
             }
@@ -167,6 +176,7 @@ app.put('/user/:email', function(req, res) {
 app.post('/addItem', function (req, res) {
     var item = new Item();
     if (!req.body.productName||!req.body.productPrice||!req.body.scanContent) {
+        res.status(400);
         var error_message = {
             code: '400',
             message: 'Invalid product. Please try again'
@@ -175,6 +185,7 @@ app.post('/addItem', function (req, res) {
     } else {
         Item.find({productName: req.body.productName}, function (err, items) {
             if (items.length > 0) {
+                res.status(400);
                 res.json({code: '400', message: 'product is already registered'});
             } else {
                 item.productName = req.body.productName;
@@ -187,6 +198,7 @@ app.post('/addItem', function (req, res) {
                     if (err) {
                         res.send(err);
                     }
+                    res.status(200);
                     res.json({code: "200", message: 'Product successfully added to catalogue!!'});
                 });
             }
@@ -208,9 +220,11 @@ app.get('/findItem/:scanContent', function(req, res) {
     item.scanContent = req.scanContent;
     Item.find({scanContent: item.scanContent}, function (err, items){
         if(items.length > 0){
+            res.status(200);
             res.json(items);
         }
         else{
+            res.status(400);
             res.json({message: 'An item with that barcode data is not registered with Hoarder. Please try again'});
         }
     });
