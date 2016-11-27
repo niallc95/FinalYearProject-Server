@@ -111,6 +111,7 @@ app.post('/login', function (req, res) {
                         res.json({code: "401", message: "Not allowed!"});
                     }
                 } else {
+                    res.status(400);
                     res.json({message: "No account found with those credentials!"});
                 }
             }
