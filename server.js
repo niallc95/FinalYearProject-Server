@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
 
 app.post('/payment', function (req, res) {
     var payment = {
-        amount : "1000",
+        amount : req.body.amount,
         token : req.body.token,
         description : "payment description",
         currency : "USD"
