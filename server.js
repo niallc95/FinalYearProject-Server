@@ -21,10 +21,10 @@ app.get('/', function (req, res) {
 
 app.post('/payment', function (req, res) {
     var payment = {
-        "amount": req.body.amount,
-        "description": "Hoarder payment",
-        "token": req.body.token,
-        "currency": "EUR"
+        amount : "1000",
+        token : req.body.token,
+        description : "payment description",
+        currency : "USD"
     };
     config.SimplifyPay.payment.create(payment, function (errData, data) {
         if (errData) {
