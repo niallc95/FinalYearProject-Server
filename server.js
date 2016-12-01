@@ -23,12 +23,7 @@ app.post('/payment', function (req, res) {
     var payment = {
         "amount": req.body.amount,
         "description": "Hoarder payment",
-        "card": {
-            "expMonth": req.body.card.expMonth,
-            "expYear": req.body.card.expYear,
-            "cvc": req.body.card.cvc,
-            "number": req.body.card.number
-        },
+        "token": req.body.token,
         "currency": "EUR"
     };
     config.SimplifyPay.payment.create(payment, function (errData, data) {
