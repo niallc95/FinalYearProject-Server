@@ -21,10 +21,15 @@ app.get('/', function (req, res) {
 
 app.post('/payment', function (req, res) {
     var payment = {
-        amount : req.body.amount,
-        token : req.body.token,
-        description : "payment description",
-        currency : "USD"
+        "amount": req.body.amount,
+        "description": "Test Payment",
+        "card": {
+            "expMonth": req.body.expMonth,
+            "expYear": req.body.expYear,
+            "cvc": req.body.cvc,
+            "number": req.body.number
+        },
+        "currency": "EUR"
     };
     config.SimplifyPay.payment.create(payment, function (errData, data) {
         if (errData) {
