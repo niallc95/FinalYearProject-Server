@@ -35,6 +35,7 @@ app.post('/payment', function (req, res) {
         if (errData) {
             console.log(errData);
             console.log(data);
+            res.status(400);
             res.json({code: "400", message: errData.data.error.fieldErrors});
             console.log(errData.data.error.fieldErrors);
             console.error("Error Message: " + errData.data.error.message);
@@ -42,6 +43,7 @@ app.post('/payment', function (req, res) {
             return;
         }
         else {
+            res.status(200);
             res.json({code: "200", message: "Payment Successful"})
         }
         console.log("Payment Status: " + data.paymentStatus);
