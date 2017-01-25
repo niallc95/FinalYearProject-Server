@@ -13,8 +13,10 @@ app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
 app.get('/', function (req, res) {
-    res.json("Welcome to the hoarder server!");
+	res.status(200);
+    res.json("Welcome to the hoarder application server!");
 });
+
 //##########################################################################################
 //                                Payment
 //##########################################################################################
@@ -62,6 +64,7 @@ app.post('/user', function (req, res) {
             code: '400',
             message: 'You must have a valid email along with a password and name to create an account!'
         };
+		res.status(400);
         res.send(error_message);
     } else {
         User.find({email: req.body.email}, function (err, users) {	// Check users in the DB for the same email
@@ -74,6 +77,7 @@ app.post('/user', function (req, res) {
                 user.email = req.body.email;
                 user.phoneNumber = req.body.phoneNumber;
                 user.address = req.body.address;
+				user.credit = 0;
 
 
                 user.save(function (err) {
@@ -109,11 +113,11 @@ app.post('/login', function (req, res) {
                         res.status(200);
                         res.json({code: "200", message: "Welcome back " + users[0].name});
                     } else {
-                        res.status(401);
-                        res.json({code: "401", message: "Not allowed!"});
+                        res.status(400);
+                        res.json({code: "400", message: "Error, Bad request please try again!"});
                     }
                 } else {
-                    res.status(400);
+                    res.status(404);
                     res.json({message: "No account found with those credentials!"});
                 }
             }
@@ -172,6 +176,34 @@ app.put('/user/:email', function(req, res) {
             }
     });
 });
+
+//##########################################################################################
+//                                Update credit by email
+//##########################################################################################
+app.put('/user/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users){
+        if(users.length > 0) {
+            user.credit = req.body.credit;
+            if (!req.body.credit) {
+                res.status(400);
+                res.json({code: "400", message: 'Bad request, please try again!!'});
+            }else {
+                user.save(function (err) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.status(200);
+                    res.json({code: "200", message: 'Credit successfully loaded!!'});
+                });
+            }
+        }else{
+                res.json({message: 'Error: Invalid password. Please try again!!'});
+            }
+    });
+});
+
 //##########################################################################################
 //                                Add item to catalogue
 //##########################################################################################
