@@ -7,7 +7,7 @@ var UserSchema   = new Schema({
 	phoneNumber: String,
 	password: String,
 	address: String,
-	credit: double,
+	credit: Number
 });
 
 module.exports = mongoose.model('User', UserSchema);
