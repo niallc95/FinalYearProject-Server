@@ -161,22 +161,27 @@ app.post('/credit/:email', function(req, res) {
             res.status(200);
             var first = users[0];
             if (req.body.credit) {
-                total = first.credit + req.body.credit;
-                first.credit = total;
-                first.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    res.status(200);
-                    res.json({code: "200", message: 'Credit successfully loaded!!'});
-                });
+                if(isNaN(req.body.credit)) {
+                    res.status(400);
+                    res.json({message: 'Invalid credit value please try again!!'});
+                }else{
+                    total = first.credit + req.body.credit;
+                    first.credit = total;
+                    first.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json({code: "200", message: 'Credit successfully loaded!!'});
+                    });
+                }
             } else {
                 res.status(400);
-                res.json({message: 'Error: credit not updated!!'});
+                res.json({message: 'Invalid fields.',hint:'Ensure you have filled in the "credit" field'});
             }
         } else {
             res.status(400);
-            res.json({message: 'Error updating credit!!'});
+            res.json({message: 'Error updating credit!! Invalid User!!'});
         }
     });
 });
