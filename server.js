@@ -8,23 +8,34 @@ var bodyParser = require('body-parser');
 var moment = require('moment');
 var app = express();
 mongoose.connect(config.mongoUri);
-
 app.use(logfmt.requestLogger());
 app.use(bodyParser());
 
+//Email parameter
+app.param('email', function(req, res, next, email) {
+    req.email = email;
+    next();
+});
+//Barcode parameter
+app.param('scanContent', function(req, res, next, scanContent) {
+    req.scanContent = scanContent;
+    next();
+});
+
+//Test GET request
 app.get('/', function (req, res) {
 	res.status(200);
     res.json("Welcome to the hoarder application server!");
 });
 
-//##########################################################################################
-//                                Payment
-//##########################################################################################
+//##########################################################################################//
+//                                Payment                                                   //
+//##########################################################################################//
 
 app.post('/payment', function (req, res) {
     var payment = {
         "amount": req.body.amount,
-        "description": "Test Payment",
+        "description": "Hoarder Payment",
         "card": {
             "expMonth": req.body.expMonth,
             "expYear": req.body.expYear,
@@ -37,14 +48,13 @@ app.post('/payment', function (req, res) {
         if (errData) {
             console.log(errData);
             console.log(data);
+            //Status code of 400 to allow application to detect payment issues
             res.status(400);
             res.json({code: "400", message: errData.data.error.fieldErrors});
             console.log(errData.data.error.fieldErrors);
             console.error("Error Message: " + errData.data.error.message);
-            // handle the error
             return;
-        }
-        else {
+        }else {
             res.status(200);
             res.json({code: "200", message: "Payment Successful"})
         }
@@ -52,11 +62,9 @@ app.post('/payment', function (req, res) {
     });
 });
 
-//##########################################################################################
-//                                User Creation
-//##########################################################################################
-
-// creation of user
+//##########################################################################################//
+//                                User Creation                                             //
+//##########################################################################################//
 app.post('/user', function (req, res) {
     var user = new User();
     if (!req.body.email || !req.body.password || !req.body.name) {
@@ -92,17 +100,15 @@ app.post('/user', function (req, res) {
     }
 });
 
-//##########################################################################################
-//                                Login
-//##########################################################################################
-
+//##########################################################################################//
+//                                Login                                                     //
+//##########################################################################################//
 app.post('/login', function (req, res) {
     if (!req.body.password || !req.body.email) {
         res.status(400);
         res.json({code: "400", message: "You must have a valid email and password"});
     } else {
         console.log(req.body);
-
         User.find({email: req.body.email, password: req.body.password}, function (err, users) {
             if (err) {
                 res.json({code: "502", message: "Cannot connect to the database!"});
@@ -114,26 +120,20 @@ app.post('/login', function (req, res) {
                         res.json({code: "200", message: "Welcome back " + users[0].name});
                     } else {
                         res.status(400);
-                        res.json({code: "400", message: "Error, Bad request please try again!"});
+                        res.json({code: "400", message: "Error, invalid login"});
                     }
                 } else {
                     res.status(404);
-                    res.json({message: "No account found with those credentials!"});
+                    res.json({message: "No account found with those credentials. Please try again!"});
                 }
             }
         });
     }
 });
 
-//##########################################################################################
-//                                Find user by email
-//##########################################################################################
-
-app.param('email', function(req, res, next, email) {
-    req.email = email;
-    next();
-});
-
+//##########################################################################################//
+//                                Find user by email                                        //
+//##########################################################################################//
 app.get('/user/:email', function(req, res) {
     var user = new User();
     user.email = req.email;
@@ -150,41 +150,40 @@ app.get('/user/:email', function(req, res) {
     });
 });
 
-//##########################################################################################
-//                                Update user by email
-//##########################################################################################
-app.post('/user/:email', function(req, res) {
-    if (!req.body.password) {
-        var error_message = {
-            code: '400',
-            message: 'UPDATE ERROR'
-        };
-		res.status(400);
-        res.send(error_message);
-    } else {
-        User.find({email: req.email}, function (err, user) {	// Check users in the DB for the same email
-            if (user.length > 0) {
-                user.password = req.body.password;
-				
-				user.save(function (err) {
+//##########################################################################################//
+//                                Update credit by email                                    //
+//##########################################################################################//
+app.post('/credit/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users) {
+        if (users.length > 0) {
+            res.status(200);
+            var first = users[0];
+            if (req.body.credit) {
+                total = first.credit + req.body.credit;
+                first.credit = total;
+                first.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
                     res.status(200);
-                    res.json({code: "200", message: 'User account UPSADAER successfully'});
+                    res.json({code: "200", message: 'Credit successfully loaded!!'});
                 });
-				
             } else {
-                    res.status(400);
-                    res.json({code: "400", message: 'ERROR'});
+                res.status(400);
+                res.json({message: 'Error: credit not updated!!'});
             }
-        });
-    }
+        } else {
+            res.status(400);
+            res.json({message: 'Error updating credit!!'});
+        }
+    });
 });
 
-//##########################################################################################
-//                                Add item to catalogue
-//##########################################################################################
+//##########################################################################################//
+//                                Add item to catalogue                                     //
+//##########################################################################################//
 
 app.post('/addItem', function (req, res) {
     var item = new Item();
@@ -219,15 +218,9 @@ app.post('/addItem', function (req, res) {
     }
 });
 
-//##########################################################################################
-//                                Find item by barcode
-//##########################################################################################
-
-app.param('scanContent', function(req, res, next, scanContent) {
-    req.scanContent = scanContent;
-    next();
-});
-
+//##########################################################################################//
+//                                Find item by barcode                                      //
+//##########################################################################################//
 app.get('/findItem/:scanContent', function(req, res) {
     var item = new Item();
     item.scanContent = req.scanContent;
@@ -243,10 +236,9 @@ app.get('/findItem/:scanContent', function(req, res) {
     });
 });
 
-//##########################################################################################
-//                                Server Port Config
-//##########################################################################################
-
+//##########################################################################################//
+//                                Server Port Config                                        //
+//##########################################################################################//
 var port = Number(process.env.PORT || 4000);
 app.listen(port, function () {
     console.log("Listening on " + port);
