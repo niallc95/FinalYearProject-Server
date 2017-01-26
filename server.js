@@ -155,48 +155,25 @@ app.get('/user/:email', function(req, res) {
 //##########################################################################################
 app.put('/user/:email', function(req, res) {
     User.find({email: req.email}, function (err, user){
-		if(user.length > 0) {
-			if (!req.body.password) {
-				res.status(400);
-				res.json({code: "400", message: 'Bad request, please try again!!'});
-			}else {
-				user.password = req.body.password;
-				res.status(200);
-				res.json({code: "200", message: 'Account successfully updated!!'});
-			}
-		}else{
-			res.json({message: 'Error: Invalid password. Please try again!!'});
+	if(user.length > 0) {
+		if (!req.body.password) {
+			res.status(400);
+			res.json({code: "400", message: 'Bad request, please try again!!'});
+		}else {
+			user.password = req.body.password;
+			
+			user.save(function (err) {
+                    		if (err) {
+                        		res.send(err);
+                    		}
+                    		res.status(200);
+                    		res.json({code: "200", message: 'Product successfully added to catalogue!!'});
+                	});
 		}
-	});
+	}else{
+		res.json({message: 'Error: Invalid password. Please try again!!'});
+	}});
 });
-
-//##########################################################################################
-//                                Update credit by email
-//##########################################################################################
-app.put('/user/:email', function(req, res) {
-    var user = new User();
-    user.email = req.email;
-    User.find({email: user.email}, function (err, users){
-        if(users.length > 0) {
-            user.credit = req.body.credit;
-            if (!req.body.credit) {
-                res.status(400);
-                res.json({code: "400", message: 'Bad request, please try again!!'});
-            }else {
-                user.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    res.status(200);
-                    res.json({code: "200", message: 'Credit successfully loaded!!'});
-                });
-            }
-        }else{
-                res.json({message: 'Error: Invalid password. Please try again!!'});
-            }
-    });
-});
-
 //##########################################################################################
 //                                Add item to catalogue
 //##########################################################################################
