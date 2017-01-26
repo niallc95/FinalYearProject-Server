@@ -168,6 +168,7 @@ app.put('/user/:email', function(req, res) {
 		res.json({message: 'Error: Invalid password. Please try again!!'});
     }
 });
+});
 
 //##########################################################################################
 //                                Add item to catalogue
