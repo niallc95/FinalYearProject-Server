@@ -154,27 +154,20 @@ app.get('/user/:email', function(req, res) {
 //                                Update user by email
 //##########################################################################################
 app.put('/user/:email', function(req, res) {
-    var user = new User();
-    user.email = req.email;
-    User.find({email: user.email}, function (err, users){
-        if(users.length > 0) {
-            user.password = req.body.password;
-            if (!req.body.password) {
-                res.status(400);
-                res.json({code: "400", message: 'Bad request, please try again!!'});
-            }else {
-                user.save(function (err) {
-                    if (err) {
-                        res.send(err);
-                    }
-                    res.status(200);
-                    res.json({code: "200", message: 'Account successfully updated!!'});
-                });
-            }
-        }else{
-                res.json({message: 'Error: Invalid password. Please try again!!'});
-            }
-    });
+    User.find({email: req.email}, function (err, user){
+		if(user.length > 0) {
+			if (!req.body.password) {
+				res.status(400);
+				res.json({code: "400", message: 'Bad request, please try again!!'});
+			}else {
+				user.password = req.body.password;
+				res.status(200);
+				res.json({code: "200", message: 'Account successfully updated!!'});
+			}
+		}else{
+			res.json({message: 'Error: Invalid password. Please try again!!'});
+		}
+	});
 });
 
 //##########################################################################################
