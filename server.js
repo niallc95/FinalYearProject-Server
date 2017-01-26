@@ -153,7 +153,7 @@ app.get('/user/:email', function(req, res) {
 //##########################################################################################
 //                                Update user by email
 //##########################################################################################
-app.put('/user/:email', function(req, res) {
+app.post('/user/:email', function(req, res) {
     if (!req.body.password) {
         var error_message = {
             code: '400',
