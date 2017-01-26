@@ -154,25 +154,32 @@ app.get('/user/:email', function(req, res) {
 //                                Update user by email
 //##########################################################################################
 app.put('/user/:email', function(req, res) {
-    User.find({email: req.email}, function (err, user){
-    if(user.length > 0) {
-			if (!req.body.password) {
-				res.status(400);
-				res.json({code: "400", message: 'Bad request, please try again!!'});
-			}else {
-				user.password = req.body.password;
+    if (!req.body.password) {
+        var error_message = {
+            code: '400',
+            message: 'UPDATE ERROR'
+        };
+		res.status(400);
+        res.send(error_message);
+    } else {
+        User.find({email: req.email}, function (err, user) {	// Check users in the DB for the same email
+            if (user.length > 0) {
+                user.password = req.body.password;
+				
 				user.save(function (err) {
                     if (err) {
                         res.send(err);
                     }
                     res.status(200);
-                    res.json({code: "200", message: 'Product successfully added to catalogue!!'});
+                    res.json({code: "200", message: 'User account UPSADAER successfully'});
                 });
-			}
-		}else{
-			res.json({message: 'Error: Invalid password. Please try again!!'});
-		}
-});
+				
+            } else {
+                    res.status(400);
+                    res.json({code: "400", message: 'ERROR'});
+            }
+        });
+    }
 });
 
 //##########################################################################################
