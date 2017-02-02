@@ -247,7 +247,7 @@ app.get('/findItem/:scanContent', function(req, res) {
 //##########################################################################################//
 app.post('/receipt/:email', function (req, res) {
     var receipt = new Receipt();
-    if (req.body.items.length==0||!req.body.items||!req.email||!req.body.totalCost) {
+    if (req.body.items.length==0||!req.body.items||!req.email) {
         res.status(400);
         var error_message = {
             code: '400',
@@ -260,7 +260,6 @@ app.post('/receipt/:email', function (req, res) {
                 receipt.email = req.email;
                 receipt.date = moment().format('MM/DD/YYYY');
                 receipt.time = moment().format('hh:mm:ss');
-                receipt.totalCost = req.body.totalCost;
                 receipt.items = req.body.items;
 
                 receipt.save(function (err) {
