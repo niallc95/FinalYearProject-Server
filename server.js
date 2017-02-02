@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var config = require("./config");
 var User = require('./models/user');
 var Item = require('./models/item');
+var Receipt = require('./models/receipt');
 var bodyParser = require('body-parser');
 var moment = require('moment');
 var app = express();
@@ -237,6 +238,60 @@ app.get('/findItem/:scanContent', function(req, res) {
         else{
             res.status(400);
             res.json({message: 'An item with that barcode data is not registered with Hoarder. Please try again'});
+        }
+    });
+});
+
+//##########################################################################################//
+//                                Add Receipt                                               //
+//##########################################################################################//
+app.post('/receipt/:email', function (req, res) {
+    var receipt = new Receipt();
+    if (req.body.items.length==0||!req.body.items||!req.email) {
+        res.status(400);
+        var error_message = {
+            code: '400',
+            message: 'Invalid receipt details please try again!!'
+        };
+        res.send(error_message);
+    } else {
+        User.find({email: req.email}, function (err, users) {
+            if (users.length > 0) {
+                receipt.email = req.email;
+                receipt.date = moment().format('MM/DD/YYYY');
+                receipt.time = moment().format('hh:mm:ss');
+                receipt.items = req.body.items;
+
+                receipt.save(function (err) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.status(200);
+                    res.json({code: "200", message: 'Receipt successfully generated!!'});
+                });
+            } else {
+                res.status(400);
+                res.json({code: '400', message: 'Issue generating receipt please try again!!'});
+            }
+        });
+    }
+});
+
+
+//##########################################################################################//
+//                                Get Receipt by email                                      //
+//##########################################################################################//
+app.get('/findReceipt/:email', function(req, res) {
+    var receipt = new Receipt();
+    receipt.email = req.email;
+    Receipt.find({email: receipt.email}, function (err, receipts){
+        if(receipts.length > 0){
+            res.status(200);
+            res.json(receipts);
+        }
+        else{
+            res.status(400);
+            res.json({message: 'No receipts for this user'});
         }
     });
 });
