@@ -68,7 +68,7 @@ app.post('/payment', function (req, res) {
 //##########################################################################################//
 app.post('/user', function (req, res) {
     var user = new User();
-    if (!req.body.email || !req.body.password || !req.body.name) {
+    if (!req.body.email || !req.body.password || !req.body.name||!req.body.phoneNumber) {
         var error_message = {
             code: '400',
             message: 'You must have a valid email along with a password and name to create an account!'
@@ -85,9 +85,9 @@ app.post('/user', function (req, res) {
                 user.password = req.body.password;
                 user.email = req.body.email;
                 user.phoneNumber = req.body.phoneNumber;
-                user.address = req.body.address;
+                user.date = moment().format('DD/MM/YYYY');
 				user.credit = 0;
-
+                user.orders = 0;
 
                 user.save(function (err) {
                     if (err) {
