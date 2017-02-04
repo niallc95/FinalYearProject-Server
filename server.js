@@ -140,9 +140,24 @@ app.get('/user/:email', function(req, res) {
     user.email = req.email;
     User.find({email: user.email}, function (err, users){
         if(users.length > 0){
-            res.status(200);
             var first=users[0];
-            res.json(first);
+            Receipt.find({email: user.email}, function (err, receipts){
+                if(receipts.length > 0){
+                    first.orders = receipts.length;
+                    first.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json(first);
+                    });
+                }
+                else{
+                    user.orders = 0;
+                    res.status(200);
+                    res.json(first);
+                }
+            });
         }
         else{
             res.status(400);
