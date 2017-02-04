@@ -86,7 +86,7 @@ app.post('/user', function (req, res) {
                 user.email = req.body.email;
                 user.phoneNumber = req.body.phoneNumber;
                 user.date = moment().format('DD/MM/YYYY');
-				user.credit = 0;
+		user.credit = 0;
                 user.orders = 0;
 
                 user.save(function (err) {
@@ -273,8 +273,8 @@ app.post('/receipt/:email', function (req, res) {
         User.find({email: req.email}, function (err, users) {
             if (users.length > 0) {
                 receipt.email = req.email;
-                receipt.date = moment().format('MM/DD/YYYY');
-                receipt.time = moment().format('hh:mm:ss');
+                receipt.date = moment().format('DD/MM/YYYY');
+                receipt.time = moment().format('HH:MM');
                 receipt.items = req.body.items;
 
                 receipt.save(function (err) {
