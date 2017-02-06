@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var config = require("./config");
 var User = require('./models/user');
 var Item = require('./models/item');
+var List = require('./models/list');
 var Receipt = require('./models/receipt');
 var bodyParser = require('body-parser');
 var moment = require('moment');
@@ -86,7 +87,7 @@ app.post('/user', function (req, res) {
                 user.email = req.body.email;
                 user.phoneNumber = req.body.phoneNumber;
                 user.date = moment().format('DD/MM/YYYY');
-		user.credit = 0;
+				user.credit = 0;
                 user.orders = 0;
 
                 user.save(function (err) {
@@ -118,7 +119,7 @@ app.post('/login', function (req, res) {
                     //successful login response
                     if (req.body.password == users[0].password) {
                         res.status(200);
-                        res.json({code: "200", message: "Welcome back " + users[0].name});
+                        res.json(users[0]);
                     } else {
                         res.status(400);
                         res.json({code: "400", message: "Error, invalid login"});
@@ -257,6 +258,8 @@ app.get('/findItem/:scanContent', function(req, res) {
     });
 });
 
+
+
 //##########################################################################################//
 //                                Add Receipt                                               //
 //##########################################################################################//
@@ -273,12 +276,12 @@ app.post('/receipt/:email', function (req, res) {
         User.find({email: req.email}, function (err, users) {
             if (users.length > 0) {
                 receipt.email = req.email;
-                receipt.date = moment().format('DD/MM/YYYY');
-                receipt.time = moment().format('HH:MM');
-		receipt.itemCount = req.body.itemCount;
-		receipt.totalCost = req.body.totalCost;
-		receipt.referenceNumber = req.body.referenceNumber;
+                receipt.date = moment().format('MM/DD/YYYY');
+                receipt.time = moment().format('HH:mm');
+                receipt.referenceNumber = req.body.referenceNumber;
+                receipt.itemCount = req.body.itemCount;
                 receipt.items = req.body.items;
+
 
                 receipt.save(function (err) {
                     if (err) {
