@@ -355,6 +355,25 @@ app.post('/list/:email', function(req, res) {
 });
 
 //##########################################################################################//
+//                                Get List by email                                        //
+//##########################################################################################//
+app.get('/findList/:email', function(req, res) {
+    var list = new List();
+    list.email = req.email;
+    List.find({email: list.email}, function (err, lists){
+        if(lists.length > 0){
+            res.status(200);
+            res.json(lists);
+        }
+        else{
+            res.status(400);
+            res.json({message: 'No lists for this user'});
+        }
+    });
+});
+
+
+//##########################################################################################//
 //                                Server Port Config                                        //
 //##########################################################################################//
 var port = Number(process.env.PORT || 4000);
