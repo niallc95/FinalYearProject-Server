@@ -315,6 +315,46 @@ app.get('/findReceipt/:email', function(req, res) {
 });
 
 //##########################################################################################//
+//                                Update list by email                                      //
+//##########################################################################################//
+app.post('/list/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: req.email}, function (err, users) {
+        var list = new List();
+        if (users.length > 0) {
+            List.find({email: req.email}, function (err, lists) {
+                if(lists.length > 0){
+                    var first = lists[0];
+                    first.items.push(req.body.items);
+                    first.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json({code: "200", message: 'Shopping list updated'});
+                    });
+                }else{
+                    list.email = req.email;
+                    list.items = req.body.items;
+
+                    list.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json({code: "200", message: 'Shopping list created'});
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            res.json({message: 'Error updating list!! Invalid User!!'});
+        }
+    });
+});
+
+//##########################################################################################//
 //                                Server Port Config                                        //
 //##########################################################################################//
 var port = Number(process.env.PORT || 4000);
