@@ -358,6 +358,33 @@ app.post('/list/:email', function(req, res) {
 });
 
 //##########################################################################################//
+//                                Overwrite list by email                                      //
+//##########################################################################################//
+app.post('/listReplace/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: req.email}, function (err, users) {
+        var list = new List();
+        if (users.length > 0) {
+            List.find({email: req.email}, function (err, lists) {
+                    var first = lists[0];
+                    first.items = req.body.items;
+                    first.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json({code: "200", message: 'Shopping list updated'});
+                    });
+            });
+        } else {
+            res.status(400);
+            res.json({message: 'Error updating list!! Invalid User!!'});
+        }
+    });
+});
+
+//##########################################################################################//
 //                                Get List by email                                        //
 //##########################################################################################//
 app.get('/findList/:email', function(req, res) {
