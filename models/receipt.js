@@ -10,7 +10,8 @@ var ReceiptSchema = new Schema({
     totalCost: String,
     items: [{
             productName: String,
-            productPrice: String
+            productPrice: String,
+            productQuantity: Number
         }]
     });
 module.exports = mongoose.model('receipt', ReceiptSchema);
