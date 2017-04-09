@@ -182,7 +182,7 @@ app.post('/credit/:email', function(req, res) {
                     res.status(400);
                     res.json({message: 'Invalid credit value please try again!!'});
                 }else{
-                    total = first.credit + req.body.credit;
+                    total = req.body.credit;
                     first.credit = total;
                     first.save(function (err) {
                         if (err) {
