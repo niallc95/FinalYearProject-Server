@@ -279,6 +279,7 @@ app.post('/receipt/:email', function (req, res) {
                 receipt.date = moment().format('MM/DD/YYYY');
                 receipt.time = moment().format('HH:mm');
 		receipt.totalCost = req.body.totalCost;
+		receipt.discount = req.body.discount;
                 receipt.referenceNumber = req.body.referenceNumber;
                 receipt.itemCount = req.body.itemCount;
                 receipt.items = req.body.items;
