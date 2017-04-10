@@ -5,6 +5,7 @@ var ReceiptSchema = new Schema({
     email: String,
     referenceNumber:String,
     itemCount:String,
+    discount:String,
     date: String,
     time: String,
     totalCost: String,
