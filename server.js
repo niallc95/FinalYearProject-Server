@@ -214,7 +214,7 @@ app.post('/password/:email', function(req, res) {
             res.status(200);
             var first = users[0];
             if (req.body.newPassword && req.body.oldPassword) {
-              	if(req.body.oldPassword = first.password){
+              	if(!req.body.oldPassword == first.password){
 		    res.status(400);
                     res.json({message: 'Password is incorrect'});
 		}else{
