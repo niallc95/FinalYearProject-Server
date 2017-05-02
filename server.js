@@ -204,6 +204,42 @@ app.post('/credit/:email', function(req, res) {
 });
 
 //##########################################################################################//
+//                                Update password by email                                    //
+//##########################################################################################//
+app.post('/password/:email', function(req, res) {
+    var user = new User();
+    user.email = req.email;
+    User.find({email: user.email}, function (err, users) {
+        if (users.length > 0) {
+            res.status(200);
+            var first = users[0];
+            if (req.body.newPassword && req.body.oldPassword) {
+              	if(req.body.oldPassword = first.password){
+		    res.status(400);
+                    res.json({message: 'Password is incorrect'});
+		}else{
+                    newPassword = req.body.newPassword;
+                    first.password = newPassword;
+                    first.save(function (err) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        res.status(200);
+                        res.json({code: "200", message: 'Password has been changed!!'});
+                    });
+                }
+            } else {
+                res.status(400);
+                res.json({message: 'Invalid fields.',hint:'Ensure you have filled in the "password" field'});
+            }
+        } else {
+            res.status(400);
+            res.json({message: 'Error updating password!! Invalid User!!'});
+        }
+    });
+});
+
+//##########################################################################################//
 //                                Add item to catalogue                                     //
 //##########################################################################################//
 
